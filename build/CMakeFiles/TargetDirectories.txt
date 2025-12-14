@@ -1,0 +1,9 @@
+/home/average/code/build/CMakeFiles/user_main.dir
+/home/average/code/build/CMakeFiles/server_main.dir
+/home/average/code/build/CMakeFiles/device_main.dir
+/home/average/code/build/CMakeFiles/edit_cache.dir
+/home/average/code/build/CMakeFiles/rebuild_cache.dir
+/home/average/code/build/CMakeFiles/list_install_components.dir
+/home/average/code/build/CMakeFiles/install.dir
+/home/average/code/build/CMakeFiles/install/local.dir
+/home/average/code/build/CMakeFiles/install/strip.dir

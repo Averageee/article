@@ -1,0 +1,1 @@
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/test.dir/link.d CMakeFiles/test.dir/main.cpp.o -o test  /usr/local/lib/libntl.a /usr/lib/x86_64-linux-gnu/libgmp.a -lcrypto

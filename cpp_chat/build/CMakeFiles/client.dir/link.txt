@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/client.dir/link.d CMakeFiles/client.dir/src/client.cpp.o -o client  /usr/lib/x86_64-linux-gnu/libboost_system.so.1.83.0

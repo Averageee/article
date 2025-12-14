@@ -1,0 +1,4 @@
+/home/average/code/cpp_chat/build/CMakeFiles/server.dir
+/home/average/code/cpp_chat/build/CMakeFiles/client.dir
+/home/average/code/cpp_chat/build/CMakeFiles/edit_cache.dir
+/home/average/code/cpp_chat/build/CMakeFiles/rebuild_cache.dir
