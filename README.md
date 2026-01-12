@@ -84,19 +84,19 @@ vim network.conf
 
 ```conf
 # Server configuration
-SERVER_IP 192.168.1.100
+SERVER_IP <YOUR_SERVER_IP>
 SERVER_PORT 9000
 
 # Device configuration
-DEVICE 1 192.168.1.101 9101
-DEVICE 2 192.168.1.102 9101
-DEVICE 3 192.168.1.103 9101
+DEVICE 1 <YOUR_DEVICE1_IP> 9101
+DEVICE 2 <YOUR_DEVICE2_IP> 9101
+DEVICE 3 <YOUR_DEVICE3_IP> 9101
 ```
 
 ### Environment variables (optional)
 
 ```bash
-export SERVER_IP=192.168.1.100
+export SERVER_IP=<YOUR_SERVER_IP>
 export SERVER_PORT=9000
 ```
 
@@ -126,10 +126,15 @@ The system will execute:
 |------|------|
 | `build_ubuntu.sh` | Build the project |
 | `deploy.sh` | Automated deployment to multiple machines |
+| `start_all.sh` | Start all components |
+| `stop_all.sh` | Stop all components |
+| `test_network.sh` | Test network connectivity |
 
 ## Documentation
 
 - [DEPLOYMENT.md](DEPLOYMENT.md) - Detailed distributed deployment guide
+- [DISTRIBUTED_CHANGES.md](DISTRIBUTED_CHANGES.md) - Code change notes
+- [network.conf.example](network.conf.example) - Configuration example
 
 ## Technical Details
 ### Cryptographic foundations
@@ -186,3 +191,10 @@ Set according to project needs.
 ## Contributing
 Issues and pull requests are welcome.
 
+## Changelog
+
+
+### Initial release
+- Basic threshold PRF functionality
+- Device revocation mechanism
+- Key update functionality
