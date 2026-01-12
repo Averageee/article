@@ -1,289 +1,219 @@
-# 快速部署指南 - 每个设备需要什么
+# Quick Deployment Guide - What Each Device Needs
 
-## 📦 必需文件清单
-
-### 所有设备都需要的文件（共用）
+## Required Files
+### Files needed on all devices (shared)
 
 ```
-项目根目录/
-├── CMakeLists.txt          # 编译配置
-├── build_ubuntu.sh         # 编译脚本
-├── network.conf            # ⚠️ 网络配置（所有设备必须相同！）
-│
-├── common/                 # 公共库（所有设备必需）
-│   ├── config.hpp         # 配置管理
-│   ├── crypto.hpp         # 密码学函数
-│   ├── share.hpp          # 秘密分享
-│   └── net.hpp            # 网络通信
-│
-├── user/                   # 用户客户端源码
-│   └── user_main.cpp
-│
-├── server/                 # 服务器源码
-│   └── server_main.cpp
-│
-└── device/                 # 设备源码
-    └── device_main.cpp
+project-root/
+|-- CMakeLists.txt          # Build configuration
+|-- build_ubuntu.sh         # Build script
+|-- network.conf            # Network config (must be identical on all devices)
+|-- common/                 # Shared library (required on all devices)
+|   |-- config.hpp          # Configuration management
+|   |-- crypto.hpp          # Cryptographic functions
+|   |-- share.hpp           # Secret sharing
+|   `-- net.hpp             # Networking
+|-- user/                   # User client source
+|-- server/                 # Server source
+`-- device/                 # Device source
 ```
 
-### 可选文件（方便管理）
+### Optional files (for convenience)
+
 ```
-├── README.md              # 项目说明
-├── DEPLOYMENT.md          # 部署文档
-├── network.conf.example   # 配置示例
+|-- README.md              # Project overview
+|-- DEPLOYMENT.md          # Deployment guide
+`-- network.conf.example   # Configuration example
 ```
 
-## 🎯 三种部署场景
+## Three Deployment Scenarios
 
----
+### Scenario 1: Full copy to every device (recommended)
+Best for: all devices are Ubuntu 25.04 and need full functionality
 
-### 场景1：完整复制到每个设备（推荐）
+Steps:
 
-**适用于**：所有设备都是Ubuntu 25.04，需要完整功能
+#### Step 1: Package the entire project
 
-**操作步骤**：
-
-#### 步骤1：打包整个项目
 ```bash
-# 在开发机上
-cd /home/average
-tar czf code.tar.gz code/ --exclude=code/build --exclude=code/.git
+# On the dev machine
+tar -czf thresholdprf.tar.gz article-master
 ```
 
-#### 步骤2：复制到每个设备
+#### Step 2: Copy to each device
+
 ```bash
-# 复制到服务器设备 (192.168.1.100)
-scp code.tar.gz user@192.168.1.100:~/
+# Copy to server device (192.168.1.100)
+scp thresholdprf.tar.gz user@192.168.1.100:/home/user/
 
-# 复制到设备1 (192.168.1.101)
-scp code.tar.gz user@192.168.1.101:~/
+# Copy to device 1 (192.168.1.101)
+scp thresholdprf.tar.gz user@192.168.1.101:/home/user/
 
-# 复制到设备2 (192.168.1.102)
-scp code.tar.gz user@192.168.1.102:~/
+# Copy to device 2 (192.168.1.102)
+scp thresholdprf.tar.gz user@192.168.1.102:/home/user/
 
-# ... 其他设备
+# ... other devices
 ```
 
-#### 步骤3：在每个设备上解压和编译
+#### Step 3: Extract and build on each device
+
 ```bash
-# 在每台设备上执行
-cd ~
-tar xzf code.tar.gz
-cd code
+# On each device
+tar -xzf thresholdprf.tar.gz
+cd article-master
 ./build_ubuntu.sh
 ```
 
-#### 步骤4：启动对应组件
+#### Step 4: Start the corresponding component
 
-**在服务器设备上 (192.168.1.100)**：
+On the server device (192.168.1.100):
+
 ```bash
-cd ~/code/build
+cd build
 ./server_main
 ```
 
-**在设备1上 (192.168.1.101)**：
+On device 1 (192.168.1.101):
+
 ```bash
-cd ~/code/build
+cd build
 ./device_main 1
 ```
 
-**在设备2上 (192.168.1.102)**：
+On device 2 (192.168.1.102):
+
 ```bash
-cd ~/code/build
+cd build
 ./device_main 2
 ```
 
-**在用户客户端机器上**：
+On the user client machine:
+
 ```bash
-cd ~/code/build
+cd build
 ./user_main
 ```
 
----
+### Scenario 2: Minimal deployment (only what is needed)
+Best for: resource-limited devices, only deploy what runs locally
 
-### 场景2：最小化部署（仅部署需要的）
+#### Minimal file set for the server device
 
-**适用于**：资源受限设备，只部署需要运行的组件
-
-#### 服务器设备最小文件集
-```bash
-# 在服务器设备上需要
-code/
-├── CMakeLists.txt
-├── build_ubuntu.sh
-├── network.conf
-├── common/              # 全部文件
-├── server/              # 服务器源码
-│   └── server_main.cpp
-├── user/                # 需要（因为CMakeLists.txt会编译）
-│   └── user_main.cpp
-└── device/              # 需要（因为CMakeLists.txt会编译）
-    └── device_main.cpp
+```
+project-root/
+|-- common/              # all files
+|-- server/              # server source
+|-- user/                # required because CMake builds all targets
+`-- device/              # required because CMake builds all targets
 ```
 
-#### 设备节点最小文件集
-```bash
-# 在每个设备节点上需要
-code/
-├── CMakeLists.txt
-├── build_ubuntu.sh
-├── network.conf
-├── common/              # 全部文件
-├── device/              # 设备源码
-│   └── device_main.cpp
-├── user/                # 需要（因为CMakeLists.txt会编译）
-│   └── user_main.cpp
-└── server/              # 需要（因为CMakeLists.txt会编译）
-    └── server_main.cpp
+#### Minimal file set for each device node
+
+```
+project-root/
+|-- common/              # all files
+|-- device/              # device source
+|-- user/                # required because CMake builds all targets
+`-- server/              # required because CMake builds all targets
 ```
 
-> **注意**：由于CMakeLists.txt会编译所有三个组件，所以所有源码都需要，但运行时只启动对应的可执行文件。
+Note: CMake builds all three components, so all source directories are needed even
+if you only run one executable.
 
----
+### Scenario 3: Automated deployment with scripts
+Prerequisites:
+- SSH key login is configured for all devices
+- The dev machine can access all devices
 
-### 场景3：使用自动化脚本部署
+Steps:
 
-**前提条件**：
-- 所有设备已配置SSH免密登录
-- 开发机可以访问所有设备
+#### Step 1: Edit deployment script configuration
 
-**操作步骤**：
+Update these variables:
 
-#### 步骤1：编辑部署脚本配置
-```bash
-vim deploy.sh
+```
+SERVER_HOST, SERVER_USER
+DEVICE_HOSTS, DEVICE_USER
+REMOTE_DIR
 ```
 
-修改这些变量：
-```bash
-SERVER_HOST="192.168.1.100"
-SERVER_USER="average"
-DEVICE_HOSTS=("192.168.1.101" "192.168.1.102" "192.168.1.103")
-DEVICE_USER="average"
-REMOTE_DIR="/home/average/code"
-```
+#### Step 2: Run automated deployment
 
-#### 步骤2：执行自动部署
 ```bash
 ./deploy.sh
 ```
 
-脚本会自动：
-- 将代码同步到所有设备
-- 在每个设备上执行编译
+The script will:
+- Sync code to all devices
+- Build on each device
 
-#### 步骤3：一键启动
+#### Step 3: One-command start
+
 ```bash
-# 启动所有组件
+# Start all components
 ./start_all.sh
 
-# 或查看日志
-ssh average@192.168.1.100 'tail -f ~/code/build/server.log'
+# Or view logs
+tail -f build/server.log
 ```
 
----
+## Key Notes
+### 1. network.conf must be identical
+All devices must use the exact same `network.conf`.
 
-## ⚠️ 关键注意事项
+### 2. Build once per machine
+Each machine must build locally to generate executables for its environment.
 
-### 1. network.conf 必须一致
-**所有设备的 `network.conf` 文件必须完全相同！**
+### 3. Start order
+Start in this order: server -> devices -> user client
 
-示例配置：
-```conf
-# 这个文件在所有设备上都要一样
-SERVER_IP 192.168.1.100
-SERVER_PORT 9000
-DEVICE 1 192.168.1.101 9101
-DEVICE 2 192.168.1.102 9101
-DEVICE 3 192.168.1.103 9101
-```
+## Troubleshooting
+### Problem 1: Config file not found
 
-### 2. 确保所有依赖已安装
-在每台设备上运行：
 ```bash
-sudo apt update
-sudo apt install -y cmake build-essential libboost-all-dev \
-                    libssl-dev libntl-dev libgmp-dev pkg-config
-```
+# Ensure network.conf is in the project root
+ls network.conf
 
-### 3. 防火墙配置
-```bash
-# 在服务器上
-sudo ufw allow 9000/tcp
-
-# 在每个设备上
-sudo ufw allow 9101/tcp
-
-# 或临时关闭防火墙测试
-sudo ufw disable
-```
-
----
-
-## 📝 快速检查清单
-
-部署前检查：
-- [ ] 所有设备已安装Ubuntu 25.04
-- [ ] 所有设备已安装依赖包
-- [ ] network.conf 在所有设备上一致
-- [ ] 防火墙已配置或关闭
-- [ ] 网络连通性已测试
-
-启动前检查：
-- [ ] 所有设备上代码已编译成功
-- [ ] 先启动服务器
-- [ ] 再启动所有设备
-- [ ] 最后运行用户客户端
-
----
-
-## 🔧 故障排查
-
-### 问题1：找不到配置文件
-```bash
-# 确保 network.conf 在项目根目录
-ls -l /home/average/code/network.conf
-
-# 如果不存在，复制示例文件
+# If missing, copy the example
 cp network.conf.example network.conf
 ```
 
-### 问题2：连接被拒绝
+### Problem 2: Connection refused
+
 ```bash
-# 测试端口是否开放
+# Test whether the port is open
 telnet 192.168.1.100 9000
 
-# 检查程序是否运行
+# Check whether processes are running
 ps aux | grep server_main
 ```
 
-### 问题3：编译失败
-```bash
-# 检查依赖
-dpkg -l | grep -E "boost|ssl|ntl|gmp"
+### Problem 3: Build failure
 
-# 重新安装依赖
+```bash
+# Check dependencies
 ./build_ubuntu.sh
+
+# Reinstall dependencies
+sudo apt install -y cmake build-essential libboost-all-dev libssl-dev libntl-dev libgmp-dev pkg-config
 ```
 
----
+## Recommended Workflow
+### Initial deployment
+1. Fully test on one machine (local mode)
+2. After confirming functionality, update network.conf for distributed mode
+3. Use deploy.sh or copy manually
+4. Start in order: server -> devices -> user
 
-## 🎯 推荐工作流程
+### Day-to-day use
 
-### 初次部署
-1. 在一台机器上完整测试（本地模式）
-2. 确认功能正常后，修改 network.conf 为分布式配置
-3. 使用 deploy.sh 或手动复制到各设备
-4. 按顺序启动：服务器 → 设备 → 用户
-
-### 日常使用
 ```bash
-# 启动
+# Start
 ./start_all.sh
 
-# 停止
+# Stop
 ./stop_all.sh
 
-# 测试连通性
+# Test connectivity
 ./test_network.sh
-``` 
+```
