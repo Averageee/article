@@ -13,10 +13,10 @@ The system has three component types:
 Example topology:
 
 ```
-Server:      192.168.1.100:9000
-Device 1:    192.168.1.101:9101
-Device 2:    192.168.1.102:9101
-Device 3:    192.168.1.103:9101
+Server:      <YOUR_SERVER_IP>:9000
+Device 1:    <YOUR_DEVICE1_IP>:9101
+Device 2:    <YOUR_DEVICE2_IP>:9101
+Device 3:    <YOUR_DEVICE3_IP>:9101
 User client: any location
 ```
 
@@ -43,13 +43,13 @@ On all machines, edit `network.conf` (every machine must use the same config):
 
 ```conf
 # Server address
-SERVER_IP 192.168.1.100
+SERVER_IP <YOUR_SERVER_IP>
 SERVER_PORT 9000
 
 # Device list (device ID, device IP, device port)
-DEVICE 1 192.168.1.101 9101
-DEVICE 2 192.168.1.102 9101
-DEVICE 3 192.168.1.103 9101
+DEVICE 1 <YOUR_DEVICE1_IP> 9101
+DEVICE 2 <YOUR_DEVICE2_IP> 9101
+DEVICE 3 <YOUR_DEVICE3_IP> 9101
 ```
 
 Important: `network.conf` must be identical on all machines.
@@ -62,7 +62,7 @@ On each machine:
 ```
 
 ## Start the System
-### 1. Start the server (192.168.1.100)
+### 1. Start the server (<YOUR_SERVER_IP>)
 
 ```bash
 cd build
@@ -73,26 +73,26 @@ Output should include:
 
 ```
 === Network Configuration ===
-Server: 192.168.1.100:9000
+Server: <YOUR_SERVER_IP>:9000
 ```
 
 ### 2. Start devices (on each machine)
 
-On 192.168.1.101:
+On <YOUR_DEVICE1_IP>:
 
 ```bash
 cd build
 ./device_main 1
 ```
 
-On 192.168.1.102:
+On <YOUR_DEVICE2_IP>:
 
 ```bash
 cd build
 ./device_main 2
 ```
 
-On 192.168.1.103:
+On <YOUR_DEVICE3_IP>:
 
 ```bash
 cd build
@@ -123,7 +123,7 @@ Follow the prompts:
 Ensure required ports are open between machines:
 
 ```bash
-# On the server (192.168.1.100)
+# On the server (<YOUR_SERVER_IP>)
 sudo ufw allow 9000/tcp
 
 # On each device
@@ -138,7 +138,7 @@ Besides the config file, you can use environment variables:
 
 ```bash
 # Server
-export SERVER_IP=192.168.1.100
+export SERVER_IP=<YOUR_SERVER_IP>
 export SERVER_PORT=9000
 
 # User client
