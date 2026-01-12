@@ -8,10 +8,10 @@ echo "=== ThresholdPRF distributed deployment ==="
 echo ""
 
 # Configuration - adjust for your environment
-SERVER_HOST="192.168.1.100"
+SERVER_HOST="<YOUR_SERVER_IP>"
 SERVER_USER="average"
 
-DEVICE_HOSTS=("192.168.1.101" "192.168.1.102" "192.168.1.103")
+DEVICE_HOSTS=("<YOUR_DEVICE1_IP>" "<YOUR_DEVICE2_IP>" "<YOUR_DEVICE3_IP>")
 DEVICE_USER="average"
 
 REMOTE_DIR="/home/average/code"
