@@ -1,8 +1,0 @@
-[
-{
-  "directory": "/home/average/code/test/build",
-  "command": "/usr/bin/g++   -g -std=gnu++11 -o CMakeFiles/test.dir/main.cpp.o -c /home/average/code/test/main.cpp",
-  "file": "/home/average/code/test/main.cpp",
-  "output": "CMakeFiles/test.dir/main.cpp.o"
-}
-]
