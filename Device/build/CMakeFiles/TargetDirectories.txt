@@ -1,3 +1,0 @@
-/home/average/code/Device/build/CMakeFiles/test.dir
-/home/average/code/Device/build/CMakeFiles/edit_cache.dir
-/home/average/code/Device/build/CMakeFiles/rebuild_cache.dir
