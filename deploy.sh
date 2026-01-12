@@ -1,14 +1,13 @@
 #!/bin/bash
 
-# ThresholdPRF 分布式部署脚本
-# 此脚本将代码和配置文件分发到各个节点并编译
-
+# ThresholdPRF distributed deployment script
+# This script syncs code and config to each node and builds remotely.
 set -e
 
-echo "=== ThresholdPRF 分布式部署脚本 ==="
+echo "=== ThresholdPRF distributed deployment ==="
 echo ""
 
-# 配置部分 - 根据实际情况修改
+# Configuration - adjust for your environment
 SERVER_HOST="192.168.1.100"
 SERVER_USER="average"
 
@@ -18,62 +17,62 @@ DEVICE_USER="average"
 REMOTE_DIR="/home/average/code"
 LOCAL_DIR="$(pwd)"
 
-# 检查network.conf是否存在
+# Check network.conf exists
 if [ ! -f "network.conf" ]; then
-    echo "错误: network.conf 不存在，请先创建配置文件"
+    echo "Error: network.conf not found. Please create the configuration file first."
     exit 1
 fi
 
-echo "当前配置:"
+echo "Current configuration:"
 cat network.conf
 echo ""
-read -p "确认使用以上配置进行部署？(y/n) " -n 1 -r
+read -p "Proceed with deployment using the configuration above? (y/n) " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo "部署已取消"
+    echo "Deployment canceled."
     exit 0
 fi
 
-# 函数：部署到单个节点
+# Function: deploy to a single node
 deploy_to_node() {
     local host=$1
     local user=$2
     local node_type=$3
-    
-    echo ">>> 部署到 $node_type: $user@$host"
-    
-    # 创建远程目录
+
+    echo ">>> Deploying to $node_type: $user@$host"
+
+    # Create remote directory
     ssh $user@$host "mkdir -p $REMOTE_DIR"
-    
-    # 同步代码（排除build目录）
+
+    # Sync code (exclude build directory)
     rsync -avz --exclude 'build' --exclude '.git' \
           $LOCAL_DIR/ $user@$host:$REMOTE_DIR/
-    
-    # 远程编译
+
+    # Remote build
     ssh $user@$host "cd $REMOTE_DIR && ./build_ubuntu.sh"
-    
-    echo ">>> $node_type ($host) 部署完成"
+
+    echo ">>> $node_type ($host) deployment complete"
     echo ""
 }
 
-# 部署到服务器
-echo "=== 部署服务器 ==="
+# Deploy to server
+echo "=== Deploy server ==="
 deploy_to_node $SERVER_HOST $SERVER_USER "Server"
 
-# 部署到设备
-echo "=== 部署设备节点 ==="
+# Deploy to devices
+echo "=== Deploy device nodes ==="
 for i in "${!DEVICE_HOSTS[@]}"; do
     device_id=$((i+1))
     deploy_to_node ${DEVICE_HOSTS[$i]} $DEVICE_USER "Device$device_id"
 done
 
-echo "=== 部署完成 ==="
+echo "=== Deployment complete ==="
 echo ""
-echo "下一步操作："
-echo "1. 在服务器上启动: ssh $SERVER_USER@$SERVER_HOST 'cd $REMOTE_DIR/build && ./server_main'"
+echo "Next steps:"
+echo "1. Start server: ssh $SERVER_USER@$SERVER_HOST 'cd $REMOTE_DIR/build && ./server_main'"
 for i in "${!DEVICE_HOSTS[@]}"; do
     device_id=$((i+1))
-    echo "$((i+2)). 在设备${device_id}上启动: ssh $DEVICE_USER@${DEVICE_HOSTS[$i]} 'cd $REMOTE_DIR/build && ./device_main $device_id'"
+    echo "$((i+2)). Start device ${device_id}: ssh $DEVICE_USER@${DEVICE_HOSTS[$i]} 'cd $REMOTE_DIR/build && ./device_main $device_id'"
 done
 echo ""
-echo "或使用 start_all.sh 脚本一键启动所有组件" 
+echo "Or use start_all.sh to start all components in one command."
