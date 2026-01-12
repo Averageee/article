@@ -2,22 +2,22 @@
 
 echo "Building Threshold PRF System for Ubuntu 25.04..."
 
-# 检查依赖
+# Check dependencies
 echo "Checking dependencies..."
 
-# 安装必要的包（如果需要）
+# Install required packages (if needed)
 sudo apt update
 sudo apt install -y cmake build-essential libboost-all-dev libssl-dev libntl-dev libgmp-dev pkg-config
 
-# 创建构建目录
+# Create build directory
 mkdir -p build
 cd build
 
-# 配置CMake
+# Configure CMake
 echo "Configuring CMake..."
 cmake .. -DCMAKE_BUILD_TYPE=Release
 
-# 编译
+# Build
 echo "Building..."
 make -j$(nproc)
 
@@ -37,4 +37,3 @@ else
     echo "Build failed!"
     exit 1
 fi
-
