@@ -1,3 +1,0 @@
-/home/average/code/Server/build/CMakeFiles/test.dir
-/home/average/code/Server/build/CMakeFiles/edit_cache.dir
-/home/average/code/Server/build/CMakeFiles/rebuild_cache.dir
