@@ -1,1 +1,0 @@
-/usr/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/user_main.dir/link.d CMakeFiles/user_main.dir/user/user_main.cpp.o -o user_main  /usr/lib/x86_64-linux-gnu/libboost_system.so.1.83.0 /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so /usr/local/lib/libntl.a /usr/lib/x86_64-linux-gnu/libgmp.a -lpthread
